@@ -85,10 +85,10 @@ COMMIT;
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  username varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `name_password_index` (`name`,`password`) USING BTREE
+  KEY `name_password_index` (username,`password`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表\n';
 
 -- ----------------------------
@@ -246,7 +246,7 @@ BEGIN
     DECLARE user_count INT;
     
     -- 查询用户名是否已经存在
-    SELECT COUNT(*) INTO user_count FROM `user` WHERE `name` = username;
+    SELECT COUNT(*) INTO user_count FROM `user` WHERE username = username;
     
     -- 如果用户名已存在，则抛出错误
     IF user_count > 0 THEN
@@ -255,7 +255,7 @@ BEGIN
     END IF;
     
     -- 否则，进行用户注册逻辑，将密码加密后存储
-    INSERT INTO `user` (`name`, `password`) VALUES (username, SHA2(userpassword, 256));
+    INSERT INTO `user` (username, `password`) VALUES (username, SHA2(userpassword, 256));
     
     -- 返回注册成功信息
     SELECT '注册成功' AS message;
