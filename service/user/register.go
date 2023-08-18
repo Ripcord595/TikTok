@@ -75,8 +75,8 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	responseData := RegisterResponse{
 		StatusCode: http.StatusOK,
 		StatusMsg:  "注册成功！",
-		UserID:     int(userID),     // replace with the actual user ID from the database
-		Token:      generateToken(), // replace with the actual token generated for the user
+		UserID:     int(userID),
+		Token:      generateToken(),
 	}
 
 	// 将响应数据转换为 JSON 格式
