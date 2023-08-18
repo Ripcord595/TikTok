@@ -1,13 +1,13 @@
-package user
+package main
 
 import (
-	"bytes"
+	_ "config/github.com/go-sql-driver/mysql"
+	"crypto/rand"
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
-	//_ "github.com/go-sql-driver/mysql"
 )
 
 type RegisterRequest struct {
@@ -22,38 +22,36 @@ type RegisterResponse struct {
 	Token      string `json:"token"`
 }
 
-func main() {
+func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	// 连接数据库
-	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/db")
+	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/tiktok")
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
 
-	url := "douyin/user/register/?username=your_username&password=your_password"
-	method := "POST"
-
-	// 构建请求的数据
-	requestData := RegisterRequest{
-		Username: "your_username",
-		Password: "your_password",
-	}
-	jsonData, err := json.Marshal(requestData)
+	//检查是否连接成功
+	err = db.Ping()
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, bytes.NewReader(jsonData))
+	// 读取请求体数据
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	req.Header.Set("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
-	req.Header.Set("Content-Type", "application/json")
+	// 解析请求体数据
+	var requestData RegisterRequest
+	err = json.Unmarshal(body, &requestData)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	// 将注册信息插入数据库表
 	insertQuery := `
@@ -61,39 +59,57 @@ func main() {
 		VALUES (?, ?)
 	`
 
-	_, err = db.Exec(insertQuery, requestData.Username, requestData.Password)
+	result, err := db.Exec(insertQuery, requestData.Username, requestData.Password)
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	res, err := client.Do(req)
-
+	userID, err := result.LastInsertId()
 	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// 解析响应数据
-	responseData := RegisterResponse{}
-	err = json.Unmarshal(body, &responseData)
+	// 构建响应数据
+	responseData := RegisterResponse{
+		StatusCode: http.StatusOK,
+		StatusMsg:  "注册成功！",
+		UserID:     int(userID),     // replace with the actual user ID from the database
+		Token:      generateToken(), // replace with the actual token generated for the user
+	}
+
+	// 将响应数据转换为 JSON 格式
+	responseJSON, err := json.Marshal(responseData)
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// 处理响应数据
-	fmt.Printf("Status Code: %d\n", responseData.StatusCode)
-	fmt.Printf("Status Message: %s\n", responseData.StatusMsg)
-	fmt.Printf("User ID: %d\n", responseData.UserID)
-	fmt.Printf("Token: %s\n", responseData.Token)
+	// 设置响应头部
+	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Println("注册成功！")
+	// 发送响应数据
+	w.WriteHeader(http.StatusOK)
+	w.Write(responseJSON)
+}
+
+func generateToken() string {
+	// 生成一个具有足够安全性的随机字节数组
+	randomBytes := make([]byte, 32)
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		// 生成失败时，可以返回错误或使用默认令牌
+		return "default_token"
+	}
+
+	// 对随机字节数组进行Base64编码，生成字符串形式的令牌
+	token := base64.URLEncoding.EncodeToString(randomBytes)
+
+	return token
+}
+
+func main() {
+	http.HandleFunc("/douyin/user/register/", RegisterHandler)
+	http.ListenAndServe(":8080", nil)
 }
