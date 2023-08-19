@@ -48,7 +48,8 @@ func LoginHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// 连接数据库
-	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/tiktok")
+	dsn := "root:123456@tcp(localhost:3306)/tiktok" // 要改成自己的数据源
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
@@ -84,7 +85,8 @@ func LoginHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
-//func main() {
-//	http.HandleFunc("/douyin/user/login/", LoginHandler)
-//	http.ListenAndServe(":8080", nil)
-//}
+func main() {
+	http.HandleFunc("/douyin/user/register/", RegisterHandler)
+	http.HandleFunc("/douyin/user/login/", LoginHandler)
+	http.ListenAndServe(":8080", nil)
+}

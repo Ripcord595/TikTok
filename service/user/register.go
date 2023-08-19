@@ -25,7 +25,8 @@ type RegisterResponse struct {
 
 func RegisterHandler(writer http.ResponseWriter, request *http.Request) {
 	// 连接数据库
-	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/tiktok") //要改成自己的
+	dsn := "root:123456@tcp(localhost:3306)/tiktok" // 要改成自己的数据源
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
