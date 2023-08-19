@@ -1,13 +1,14 @@
 package main
 
 import (
-	_ "config/github.com/go-sql-driver/mysql"
 	"crypto/rand"
 	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+
+	_ "config/github.com/go-sql-driver/mysql"
 )
 
 type RegisterRequest struct {
@@ -18,30 +19,30 @@ type RegisterRequest struct {
 type RegisterResponse struct {
 	StatusCode int    `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`
-	UserID     int    `json:"user_id"`
+	UserID     int64  `json:"user_id"`
 	Token      string `json:"token"`
 }
 
-func RegisterHandler(w http.ResponseWriter, r *http.Request) {
+func RegisterHandler(writer http.ResponseWriter, request *http.Request) {
 	// 连接数据库
-	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/tiktok")
+	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/tiktok") //要改成自己的
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
 
-	//检查是否连接成功
+	// 检查是否连接成功
 	err = db.Ping()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	// 读取请求体数据
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(writer, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -49,25 +50,41 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	var requestData RegisterRequest
 	err = json.Unmarshal(body, &requestData)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(writer, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	// 将注册信息插入数据库表
-	insertQuery := `
-		INSERT INTO user (username, password)
-		VALUES (?, ?)
+	// 查询数据库检查用户名是否已存在
+	query := `
+		SELECT COUNT(*) FROM user WHERE username = ?
 	`
-
-	result, err := db.Exec(insertQuery, requestData.Username, requestData.Password)
+	var count int
+	err = db.QueryRow(query, requestData.Username).Scan(&count)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if count > 0 {
+		http.Error(writer, "用户名已存在", http.StatusBadRequest)
+		return
+	}
+
+	insertQuery := `
+		INSERT INTO user (username, password, token)
+		VALUES (?, ?, ?)
+	`
+	token := generateToken() // 生成令牌
+	result, err := db.Exec(insertQuery, requestData.Username, requestData.Password, token)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	userID, err := result.LastInsertId()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -75,23 +92,23 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	responseData := RegisterResponse{
 		StatusCode: http.StatusOK,
 		StatusMsg:  "注册成功！",
-		UserID:     int(userID),
-		Token:      generateToken(),
+		UserID:     userID,
+		Token:      token,
 	}
 
 	// 将响应数据转换为 JSON 格式
 	responseJSON, err := json.Marshal(responseData)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	// 设置响应头部
-	w.Header().Set("Content-Type", "application/json")
+	writer.Header().Set("Content-Type", "application/json")
 
 	// 发送响应数据
-	w.WriteHeader(http.StatusOK)
-	w.Write(responseJSON)
+	writer.WriteHeader(http.StatusOK)
+	writer.Write(responseJSON)
 }
 
 func generateToken() string {
@@ -109,7 +126,7 @@ func generateToken() string {
 	return token
 }
 
-func main() {
-	http.HandleFunc("/douyin/user/register/", RegisterHandler)
-	http.ListenAndServe(":8080", nil)
-}
+//func main() {
+//	http.HandleFunc("/douyin/user/register/", RegisterHandler)
+//	http.ListenAndServe(":8080", nil)
+//}

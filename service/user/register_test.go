@@ -11,8 +11,6 @@ import (
 	"testing"
 )
 
-// ...
-
 func TestRegisterHandler(t *testing.T) {
 	// 创建一个用于测试的临时数据库
 	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/tiktok")
