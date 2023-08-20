@@ -1,11 +1,10 @@
 package main
 
 import (
+	"TikTok/controller"
 	"crypto/rand"
 	"database/sql"
 	"encoding/base64"
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
 
 	_ "config/github.com/go-sql-driver/mysql"
@@ -40,20 +39,8 @@ func RegisterHandler(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	// 读取请求体数据
-	body, err := ioutil.ReadAll(request.Body)
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	// 解析请求体数据
-	var requestData RegisterRequest
-	err = json.Unmarshal(body, &requestData)
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
-		return
-	}
+	//获取请求体数据
+	requestData := controller.HandleRequest(writer, request)
 
 	// 将注册信息插入数据库表
 	// 查询数据库检查用户名是否已存在
@@ -89,27 +76,8 @@ func RegisterHandler(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	// 构建响应数据
-	responseData := RegisterResponse{
-		StatusCode: http.StatusOK,
-		StatusMsg:  "注册成功！",
-		UserID:     userID,
-		Token:      token,
-	}
-
-	// 将响应数据转换为 JSON 格式
-	responseJSON, err := json.Marshal(responseData)
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// 设置响应头部
-	writer.Header().Set("Content-Type", "application/json")
-
 	// 发送响应数据
-	writer.WriteHeader(http.StatusOK)
-	writer.Write(responseJSON)
+	controller.HandleResponse(userID, token, writer, "注册成功！")
 }
 
 func generateToken() string {
@@ -126,8 +94,3 @@ func generateToken() string {
 
 	return token
 }
-
-//func main() {
-//	http.HandleFunc("/douyin/user/register/", RegisterHandler)
-//	http.ListenAndServe(":8080", nil)
-//}
