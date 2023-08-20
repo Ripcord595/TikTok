@@ -2,42 +2,16 @@ package main
 
 import (
 	"TikTok/controller"
+	"TikTok/service"
+	_ "config/github.com/go-sql-driver/mysql"
 	"crypto/rand"
-	"database/sql"
 	"encoding/base64"
 	"net/http"
-
-	_ "config/github.com/go-sql-driver/mysql"
 )
-
-type RegisterRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type RegisterResponse struct {
-	StatusCode int    `json:"status_code"`
-	StatusMsg  string `json:"status_msg"`
-	UserID     int64  `json:"user_id"`
-	Token      string `json:"token"`
-}
 
 func RegisterHandler(writer http.ResponseWriter, request *http.Request) {
 	// 连接数据库
-	dsn := "root:123456@tcp(localhost:3306)/tiktok" // 要改成自己的数据源
-	db, err := sql.Open("mysql", dsn)
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer db.Close()
-
-	// 检查是否连接成功
-	err = db.Ping()
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	db := service.DbConnect(writer)
 
 	//获取请求体数据
 	requestData := controller.HandleRequest(writer, request)
@@ -48,7 +22,7 @@ func RegisterHandler(writer http.ResponseWriter, request *http.Request) {
 		SELECT COUNT(*) FROM user WHERE username = ?
 	`
 	var count int
-	err = db.QueryRow(query, requestData.Username).Scan(&count)
+	err := db.QueryRow(query, requestData.Username).Scan(&count)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
