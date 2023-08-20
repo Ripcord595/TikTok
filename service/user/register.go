@@ -11,7 +11,7 @@ import (
 
 func RegisterHandler(writer http.ResponseWriter, request *http.Request) {
 	// 连接数据库
-	db := service.DbConnect(writer)
+	db, err := service.DbConnect(writer)
 
 	//获取请求体数据
 	requestData := controller.HandleRequest(writer, request)
@@ -22,7 +22,7 @@ func RegisterHandler(writer http.ResponseWriter, request *http.Request) {
 		SELECT COUNT(*) FROM user WHERE username = ?
 	`
 	var count int
-	err := db.QueryRow(query, requestData.Username).Scan(&count)
+	err = db.QueryRow(query, requestData.Username).Scan(&count)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
@@ -33,11 +33,11 @@ func RegisterHandler(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	token := generateToken() // 生成令牌
 	insertQuery := `
 		INSERT INTO user (username, password, token)
 		VALUES (?, ?, ?)
 	`
-	token := generateToken() // 生成令牌
 	result, err := db.Exec(insertQuery, requestData.Username, requestData.Password, token)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)

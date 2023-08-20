@@ -10,7 +10,7 @@ import (
 func LoginHandler(writer http.ResponseWriter, request *http.Request) {
 
 	// 连接数据库
-	db := service.DbConnect(writer)
+	db, err := service.DbConnect(writer)
 
 	//获取请求体数据
 	requestData := controller.HandleRequest(writer, request)
@@ -21,7 +21,7 @@ func LoginHandler(writer http.ResponseWriter, request *http.Request) {
 	`
 	var userID int64
 	var token string
-	err := db.QueryRow(query, requestData.Username, requestData.Password).Scan(&userID, &token)
+	err = db.QueryRow(query, requestData.Username, requestData.Password).Scan(&userID, &token)
 	if err != nil {
 		http.Error(writer, "用户名或密码错误", http.StatusUnauthorized)
 		return
