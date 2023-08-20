@@ -5,11 +5,23 @@ import (
 	_ "config/github.com/go-sql-driver/mysql"
 	"database/sql"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
+
+type RegisterRequest struct {
+	Username string
+	Password string
+}
+
+type RegisterResponse struct {
+	StatusCode int    `json:"status_code"`
+	StatusMsg  string `json:"status_msg,omitempty"`
+	UserID     int64  `json:"user_id,omitempty"`
+	Token      string `json:"token,omitempty"`
+}
 
 func TestRegisterHandler(t *testing.T) {
 	// 创建一个用于测试的临时数据库
@@ -17,7 +29,12 @@ func TestRegisterHandler(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to connect to the database: %v", err)
 	}
-	defer db.Close()
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+			t.Errorf("Failed to close to the database: %v", err)
+		}
+	}(db)
 
 	// 检查数据库连接状态
 	if err := db.Ping(); err != nil {
@@ -44,7 +61,7 @@ func TestRegisterHandler(t *testing.T) {
 	}
 
 	// 从响应中读取内容
-	body, _ := ioutil.ReadAll(recorder.Body)
+	body, _ := io.ReadAll(recorder.Body)
 
 	// 解析响应数据
 	var resp RegisterResponse
