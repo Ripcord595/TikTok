@@ -1,13 +1,9 @@
 package model
 
-import "time"
-
-// User 表示用户数据模型
+// User  用户表\n
 type User struct {
-	ID        uint      // 用户ID
-	Username  string    // 用户名
-	Email     string    // 电子邮件
-	Password  string    // 密码（可能需要加密存储）
-	CreatedAt time.Time // 创建时间
-	UpdatedAt time.Time // 更新时间
+	ID       int64  `gorm:"column:id" db:"id" json:"id" form:"id"`
+	Username string `gorm:"column:username" db:"username" json:"username" form:"username"`
+	Password string `gorm:"column:password" db:"password" json:"password" form:"password"`
+	Token    string `gorm:"column:token" db:"token" json:"token" form:"token"`
 }
