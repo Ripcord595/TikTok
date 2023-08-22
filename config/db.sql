@@ -84,13 +84,25 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  username varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `token` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `name_password_index` (username,`password`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表\n';
+                        `id`               bigint       NOT NULL AUTO_INCREMENT,
+                        `username`         varchar(255) NOT NULL,
+                        `password`         varchar(255) NOT NULL,
+                        `token`            varchar(255) DEFAULT NULL,
+                        `avatar`           varchar(255) DEFAULT NULL,
+                        `background_image` varchar(255) DEFAULT NULL,
+                        `favorite_count`   bigint       DEFAULT 0,
+                        `follow_count`     bigint       DEFAULT 0,
+                        `follower_count`   bigint       DEFAULT 0,
+                        `is_follow`        tinyint(1)   DEFAULT 0,
+                        `name`             varchar(255) DEFAULT NULL,
+                        `signature`        varchar(255) DEFAULT NULL,
+                        `total_favorited`  int          DEFAULT 0,
+                        `work_count`       bigint       DEFAULT 0,
+                        PRIMARY KEY (`id`),
+                        KEY `name_password_index` (`username`, `password`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='用户表';
 
 -- ----------------------------
 -- Records of user
