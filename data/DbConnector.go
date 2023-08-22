@@ -8,7 +8,7 @@ import (
 func DbConnect(writer http.ResponseWriter) (db *sql.DB, err error) {
 	/*
 		连接数据库只需要写：
-			db := service.DbConnect(writer)
+			db, err := service.DbConnect(writer)
 		其中writer是网络响应，在这里用来返回错误状态码
 	*/
 	dsn := "root:123456@tcp(localhost:3306)/tiktok" // 要改成自己的数据源
