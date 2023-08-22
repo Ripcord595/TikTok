@@ -1,18 +1,22 @@
 package model
 
 // User 表示用户数据模型
+// User  用户表
 type User struct {
-	Avatar          string `json:"avatar"`           // 用户头像
-	BackgroundImage string `json:"background_image"` // 用户个人页顶部大图
-	FavoriteCount   int64  `json:"favorite_count"`   // 喜欢数
-	FollowCount     int64  `json:"follow_count"`     // 关注总数
-	FollowerCount   int64  `json:"follower_count"`   // 粉丝总数
-	ID              int64  `json:"id"`               // 用户id
-	IsFollow        bool   `json:"is_follow"`        // true-已关注，false-未关注
-	Name            string `json:"name"`             // 用户名称
-	Signature       string `json:"signature"`        // 个人简介
-	TotalFavorited  int    `json:"total_favorited"`  // 获赞数量
-	WorkCount       int64  `json:"work_count"`       // 作品数
+	ID              int64  `gorm:"column:id" db:"id" json:"id" form:"id"`
+	Username        string `gorm:"column:username" db:"username" json:"username" form:"username"`
+	Password        string `gorm:"column:password" db:"password" json:"password" form:"password"`
+	Token           string `gorm:"column:token" db:"token" json:"token" form:"token"`
+	Avatar          string `gorm:"column:avatar" db:"avatar" json:"avatar" form:"avatar"`
+	BackgroundImage string `gorm:"column:background_image" db:"background_image" json:"background_image" form:"background_image"`
+	FavoriteCount   int64  `gorm:"column:favorite_count" db:"favorite_count" json:"favorite_count" form:"favorite_count"`
+	FollowCount     int64  `gorm:"column:follow_count" db:"follow_count" json:"follow_count" form:"follow_count"`
+	FollowerCount   int64  `gorm:"column:follower_count" db:"follower_count" json:"follower_count" form:"follower_count"`
+	IsFollow        int64  `gorm:"column:is_follow" db:"is_follow" json:"is_follow" form:"is_follow"`
+	Name            string `gorm:"column:name" db:"name" json:"name" form:"name"`
+	Signature       string `gorm:"column:signature" db:"signature" json:"signature" form:"signature"`
+	TotalFavorited  int64  `gorm:"column:total_favorited" db:"total_favorited" json:"total_favorited" form:"total_favorited"`
+	WorkCount       int64  `gorm:"column:work_count" db:"work_count" json:"work_count" form:"work_count"`
 }
 
 // UserRequest 表示用户登录、注册时的请求数据模型
