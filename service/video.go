@@ -9,6 +9,7 @@ import (
 	"TikTok/handler"
 	_ "config/github.com/go-sql-driver/mysql"
 	"github.com/tencentyun/cos-go-sdk-v5"
+	ffmpeg "github.com/u2takey/ffmpeg-go"
         "io"
 	"net/http"
 	"net/url"
@@ -84,34 +85,44 @@ func GetVideoList(userId uint) []model.Video {
 }
 
 
-// CosUpload 上传至云端，返回url
+// CosUpload 上传至云端，返回URL
 func CosUpload(fileName string, reader io.Reader) (string, error) {
-	u, _ := url.Parse(fmt.Sprintf(dao.COS_URL_FORMAT, dao.COS_BUCKET_NAME, dao.COS_APP_ID, dao.COS_REGION))
-	b := &cos.BaseURL{BucketURL: u}
-	client := cos.NewClient(b, &http.Client{
-		Transport: &cos.AuthorizationTransport{
-			SecretID:  dao.COS_SECRET_ID,
-			SecretKey: dao.COS_SECRET_KEY,
-		},
-	})
-	//path为本地的保存路径
-	_, err := client.Object.Put(context.Background(), fileName, reader, nil)
-	if err != nil {
-		panic(err)
-	}
-	return "https://dong-1305843950.cos.ap-nanjing.myqcloud.com/" + fileName, nil
+    // 解析 COS 的基本 URL
+    u, _ := url.Parse(fmt.Sprintf(data.COS_URL_FORMAT, data.COS_BUCKET_NAME, data.COS_APP_ID, data.COS_REGION))
+    b := &cos.BaseURL{BucketURL: u}
+    
+    // 创建 COS 客户端
+    client := cos.NewClient(b, &http.Client{
+        Transport: &cos.AuthorizationTransport{
+            SecretID:  data.COS_SECRET_ID,
+            SecretKey: data.COS_SECRET_KEY,
+        },
+    })
+    
+    // 使用 COS 客户端将文件上传到云存储，path 为文件在云存储中的路径
+    _, err := client.Object.Put(context.Background(), fileName, reader, nil)
+    if err != nil {
+        panic(err) // 如果上传过程中发生错误，抛出一个 panic
+    }
+    
+    // 返回上传后的文件的完整 URL
+    return "https://dong-136240066.cos.ap-nanjing.myqcloud.com/" + fileName, nil
 }
 
 // ExampleReadFrameAsJpeg 获取封面
 func ExampleReadFrameAsJpeg(inFileName string, frameNum int) io.Reader {
-	buf := bytes.NewBuffer(nil)
-	err := ffmpeg.Input(inFileName).
-		Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frameNum)}).
-		Output("pipe:", ffmpeg.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
-		WithOutput(buf, os.Stdout).
-		Run()
-	if err != nil {
-		panic(err)
-	}
-	return buf
+    buf := bytes.NewBuffer(nil) // 创建一个新的字节缓冲区
+    
+    // 使用 ffmpeg-go 库处理视频文件
+    err := ffmpeg.Input(inFileName).
+        Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frameNum)}). // 过滤器，选择指定帧数之后的帧
+        Output("pipe:", ffmpeg.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}). // 输出配置，提取一帧并以JPEG格式输出
+        WithOutput(buf, os.Stdout). // 将输出指定到字节缓冲区 buf 中
+        Run() // 执行命令
+    
+    if err != nil {
+        panic(err) // 如果执行过程中出现错误，抛出一个 panic
+    }
+    
+    return buf // 返回字节缓冲区，其中包含提取的封面图像数据
 }
