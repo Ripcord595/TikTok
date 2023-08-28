@@ -1,0 +1,22 @@
+[mysql]
+host = "127.0.0.1"
+port = 3306
+database = "douyin"
+username = "root"
+password = "12345678"
+charset = "utf8mb4"
+parse_time = true
+loc = "Local"
+
+[redis]
+host = "127.0.0.1"
+port = 49153
+database = 0
+
+[server]
+ip = "127.0.0.1"
+port = 8080
+
+[path]
+ffmpeg_path = "./lib/ffmpeg.exe"
+static_source_path = "./static"
