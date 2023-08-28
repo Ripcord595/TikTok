@@ -1,2 +1,0 @@
-# TikTok-minimalist
-Caffeine Squad
