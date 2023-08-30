@@ -7,6 +7,7 @@ import (
 )
 
 func PostUserLogin(username, password string) (*LoginResponse, error) {
+	print("======r 3====")
 	return NewPostUserLoginFlow(username, password).Do()
 }
 
@@ -39,7 +40,9 @@ func (q *PostUserLoginFlow) Do() (*LoginResponse, error) {
 }
 
 func (q *PostUserLoginFlow) checkNum() error {
+	print("======r 1====")
 	if q.username == "" {
+		print("======r 2====")
 		return errors.New("用户名为空")
 	}
 	if len(q.username) > MaxUsernameLength {

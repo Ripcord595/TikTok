@@ -53,9 +53,9 @@ func NewConfig() Config {
 		DB: Mysql{
 			Host:      "localhost",
 			Port:      3306,
-			Database:  "mydb",
-			Username:  "myuser",
-			Password:  "mypassword",
+			Database:  "douyin",
+			Username:  "root",
+			Password:  "12345678",
 			Charset:   "utf8mb4",
 			ParseTime: true,
 			Loc:       "Local",

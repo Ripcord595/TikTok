@@ -4,7 +4,39 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ad9900fc-655b-43b0-a3ef-18e8f424a73f" name="Changes" comment="" />
+    <list default="true" id="ad9900fc-655b-43b0-a3ef-18e8f424a73f" name="Changes" comment="Renew this project and do some coding">
+      <change afterPath="$PROJECT_DIR$/internal/api/publish/api_publish_action.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/api/publish/api_publish_list.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/api/user/user_login/api_user_register.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/api/user/user_login/api_userinfo.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/service_post_follow_action.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/service_publish_action.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/service_publish_list.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/service_query_follow_list.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/conf.go" beforeDir="false" afterPath="$PROJECT_DIR$/conf/conf.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/api/feed/api_feed.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/feed/api_feed.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/api/user/user_login/api_user_login.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/user/user_login/api_user_login.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/api/user/user_register/api_user_register.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/repository/models/follow.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/repository/models/like.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/repository/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repository/models/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/repository/models/video.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repository/models/video.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/router/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/router/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/services/service_user_register.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/service_user_register.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/middleware/jwt.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/middleware/jwt.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/protocal/comment_action.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/protocal/comment_action.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/protocal/comment_list.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/protocal/comment_list.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/protocal/favorite_action.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/protocal/favorite_action.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/protocal/favorite_list.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/protocal/favorite_list.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/protocal/feed.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/protocal/feed.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/protocal/login.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/protocal/login.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/protocal/publish_action.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/protocal/publish_action.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/protocal/publish_list.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/protocal/publish_list.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/protocal/raw/comment_action.proto" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/protocal/raw/comment_action.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/protocal/register.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/protocal/register.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/protocal/user.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/protocal/user.pb.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,16 +58,16 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
         <option name="accountId" value="11663256-272d-4f42-b914-1dffae1c0f58" />
-        <option name="url" value="github.com/Ripcord595/TikTok-minimalist" />
+        <option name="url" value="git@github.com:Ripcord595/TikTok-minimalist.git" />
       </UrlAndAccount>
     </option>
   </component>
@@ -155,6 +187,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Renew this project and do some coding" />
+    <option name="LAST_COMMIT_MESSAGE" value="Renew this project and do some coding" />
   </component>
   <component name="VgoProject">
     <environment>

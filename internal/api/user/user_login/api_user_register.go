@@ -1,4 +1,4 @@
-package user_register
+package user
 
 import (
 	"github.com/gin-gonic/gin"
@@ -25,6 +25,8 @@ func UserRegisterHandler(c *gin.Context) {
 		})
 		return
 	}
+
+	print("username:" + username + ",p:" + password)
 	registerResponse, err := services.PostUserLogin(username, password)
 
 	if err != nil {

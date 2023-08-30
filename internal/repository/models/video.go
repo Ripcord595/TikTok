@@ -18,7 +18,7 @@ type Video struct {
 	CommentCount  int64       `json:"comment_count,omitempty"`
 	IsFavorite    bool        `json:"is_favorite,omitempty"`
 	Title         string      `json:"title,omitempty"`
-	Users         []*UserInfo `json:"-" gorm:"many2many:user_favor_videos;"`
+	Users         []*UserInfo `json:"-" gorm:"many2many:videos_favorite;"`
 	Comments      []*Comment  `json:"-"`
 	CreatedAt     time.Time   `json:"-"`
 	UpdatedAt     time.Time   `json:"-"`
@@ -86,7 +86,7 @@ func (v *VideoDAO) PlusOneFavorByUserIdAndVideoId(userId int64, videoId int64) e
 		if err := tx.Exec("UPDATE videos SET favorite_count=favorite_count+1 WHERE id = ?", videoId).Error; err != nil {
 			return err
 		}
-		if err := tx.Exec("INSERT INTO `user_favor_videos` (`user_info_id`,`video_id`) VALUES (?,?)", userId, videoId).Error; err != nil {
+		if err := tx.Exec("INSERT INTO `videos_favorite` (`user_info_id`,`video_id`) VALUES (?,?)", userId, videoId).Error; err != nil {
 			return err
 		}
 		return nil
@@ -98,7 +98,7 @@ func (v *VideoDAO) MinusOneFavorByUserIdAndVideoId(userId int64, videoId int64) 
 		if err := tx.Exec("UPDATE videos SET favorite_count=favorite_count-1 WHERE id = ? AND favorite_count>0", videoId).Error; err != nil {
 			return err
 		}
-		if err := tx.Exec("DELETE FROM `user_favor_videos`  WHERE `user_info_id` = ? AND `video_id` = ?", userId, videoId).Error; err != nil {
+		if err := tx.Exec("DELETE FROM `videos_favorite`  WHERE `user_info_id` = ? AND `video_id` = ?", userId, videoId).Error; err != nil {
 			return err
 		}
 		return nil
@@ -109,7 +109,7 @@ func (v *VideoDAO) QueryFavorVideoListByUserId(userId int64, videoList *[]*Video
 	if videoList == nil {
 		return errors.New("QueryFavorVideoListByUserId videoList 空指针")
 	}
-	if err := DB.Raw("SELECT v.* FROM user_favor_videos u , videos v WHERE u.user_info_id = ? AND u.video_id = v.id", userId).Scan(videoList).Error; err != nil {
+	if err := DB.Raw("SELECT v.* FROM videos_favorite u , videos v WHERE u.user_info_id = ? AND u.video_id = v.id", userId).Scan(videoList).Error; err != nil {
 		return err
 	}
 	if len(*videoList) == 0 || (*videoList)[0].Id == 0 {

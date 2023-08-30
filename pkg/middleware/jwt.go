@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -51,6 +52,7 @@ func ParseToken(tokenString string) (*Claims, bool) {
 }
 
 func JWTMiddleWare() gin.HandlerFunc {
+	fmt.Printf("run this....")
 	return func(c *gin.Context) {
 		tokenStr := c.Query("token")
 		if tokenStr == "" {
