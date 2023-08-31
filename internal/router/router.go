@@ -31,6 +31,7 @@ func Init() *gin.Engine {
 	baseGroup.POST("/favorite/action/", middleware.JWTMiddleWare(), favorite.PostFavorHandler)
 	baseGroup.GET("/favorite/list/", middleware.NoAuthToGetUserId(), favorite.QueryFavorVideoListHandler)
 	baseGroup.POST("/comment/action/", middleware.JWTMiddleWare(), comment.PostCommentHandler)
-	baseGroup.GET("/comment/list/", middleware.JWTMiddleWare(), comment.QueryCommentListHandler)
+	//baseGroup.GET("/comment/list/", middleware.JWTMiddleWare(), comment.QueryCommentListHandler)
+	baseGroup.GET("/comment/list/", comment.QueryCommentListHandlerNologin)
 	return r
 }

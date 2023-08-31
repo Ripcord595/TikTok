@@ -23,8 +23,7 @@ type PostVideoFlow struct {
 	coverName string
 	title     string
 	userId    int64
-
-	video *models.Video
+	video     *models.Video
 }
 
 func (f *PostVideoFlow) Do() error {

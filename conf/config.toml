@@ -3,7 +3,7 @@ host = "127.0.0.1"
 port = 3306
 database = "douyin"
 username = "root"
-password = "12345678"
+password = "Lyj008625"
 charset = "utf8mb4"
 parse_time = true
 loc = "Local"
@@ -14,7 +14,7 @@ port = 49153
 database = 0
 
 [server]
-ip = "127.0.0.1"
+ip = "192.128.1.4"
 port = 8080
 
 [path]

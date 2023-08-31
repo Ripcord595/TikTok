@@ -55,7 +55,7 @@ func NewConfig() Config {
 			Port:      3306,
 			Database:  "douyin",
 			Username:  "root",
-			Password:  "12345678",
+			Password:  "Lyj008625",
 			Charset:   "utf8mb4",
 			ParseTime: true,
 			Loc:       "Local",
@@ -66,7 +66,7 @@ func NewConfig() Config {
 			Database: 0,
 		},
 		Server: Server{
-			IP:   "0.0.0.0",
+			IP:   "192.168.1.4",
 			Port: 8080,
 		},
 		Path: Path{
