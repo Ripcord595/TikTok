@@ -74,9 +74,9 @@ func (p *PostCommentFlow) DeleteComment() (*models.Comment, error) {
 }
 
 func (p *PostCommentFlow) checkNum() error {
-	if !models.NewUserInfoDAO().IsUserExistById(p.userId) {
-		return fmt.Errorf("用户%d不存在", p.userId)
-	}
+	//if !models.NewUserInfoDAO().IsUserExistById(p.userId) {
+	//	return fmt.Errorf("用户%d不存在", p.userId)
+	//}
 	if !models.NewVideoDAO().IsVideoExistById(p.videoId) {
 		return fmt.Errorf("视频%d不存在", p.videoId)
 	}
